@@ -23,6 +23,39 @@ class Config:
     WEATHER_CACHE_TIMEOUT = 1800  # 30 minutes in seconds
     WEATHER_UNITS = 'metric'  # metric (Celsius), imperial (Fahrenheit)
     
+    # Currency Configuration
+    DEFAULT_CURRENCY = 'INR'
+    SUPPORTED_CURRENCIES = ['INR', 'USD', 'EUR', 'GBP', 'AED', 'SGD', 'AUD', 'CAD', 'JPY', 'CNY', 'THB', 'MYR']
+    CURRENCY_SYMBOLS = {
+        'INR': '₹',
+        'USD': '$',
+        'EUR': '€',
+        'GBP': '£',
+        'AED': 'د.إ',
+        'SGD': 'S$',
+        'AUD': 'A$',
+        'CAD': 'C$',
+        'JPY': '¥',
+        'CNY': '¥',
+        'THB': '฿',
+        'MYR': 'RM'
+    }
+    
+    # Email Configuration (SMTP)
+    MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'smtp.gmail.com'
+    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 587)
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
+    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'false').lower() in ['true', 'on', '1']
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or ('Trip Planner', 'noreply@tripplanner.com')
+    MAIL_MAX_EMAILS = None
+    MAIL_ASCII_ATTACHMENTS = False
+    
+    # Email Templates
+    MAIL_SUBJECT_PREFIX = '[Trip Planner]'
+    ADMINS = ['admin@tripplanner.com']
+    
     # Logging Configuration
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
     LOG_LEVEL = logging.DEBUG

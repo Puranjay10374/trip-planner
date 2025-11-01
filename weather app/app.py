@@ -1,7 +1,7 @@
 from flask import Flask
 from flasgger import Swagger
 from config import Config
-from extensions import db, bcrypt, jwt, migrate
+from extensions import db, bcrypt, jwt, migrate, mail
 from dotenv import load_dotenv
 import os
 import logging
@@ -43,6 +43,7 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app)
     
     # Initialize Swagger
     swagger_config = {
@@ -80,12 +81,14 @@ def create_app(config_class=Config):
     from blueprints.trips import trips_bp
     from blueprints.activities import activities_bp
     from blueprints.collaborators import collaborators_bp
+    from blueprints.expenses import expenses_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
     app.register_blueprint(trips_bp, url_prefix='/api/trips')
     app.register_blueprint(activities_bp, url_prefix='/api')
     app.register_blueprint(collaborators_bp, url_prefix='/api')
+    app.register_blueprint(expenses_bp, url_prefix='/api')
     
     # Create database tables
     with app.app_context():
@@ -112,5 +115,14 @@ if __name__ == '__main__':
     print(f"🌤️  Weather: Enabled (WeatherAPI.com)")
     print(f"📅 Activities & Day Plans: Enabled")
     print(f"👥 Collaborators: Enabled")
+    print(f"💰 Budget & Expenses: Enabled")
+    print(f"💵 Default Currency: INR (₹)")
+    
+    # Check email configuration
+    if app.config.get('MAIL_USERNAME'):
+        print(f"📧 Email: Enabled ({app.config['MAIL_SERVER']})")
+    else:
+        print(f"📧 Email: Disabled (Configure MAIL_USERNAME in .env)")
+    
     print("="*60 + "\n")
     app.run(debug=True, host='0.0.0.0', port=5000)

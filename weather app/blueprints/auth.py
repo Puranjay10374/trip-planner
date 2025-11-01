@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from flasgger import swag_from
 from extensions import db
+from utils.email_service import EmailService
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -64,8 +65,11 @@ def register():
     db.session.add(user)
     db.session.commit()
     
+    # Send welcome email
+    EmailService.send_welcome_email(user)
+    
     return jsonify({
-        'message': 'User registered successfully',
+        'message': 'User registered successfully. Welcome email sent!',
         'user': user.to_dict()
     }), 201
 
@@ -150,3 +154,58 @@ def refresh():
     current_user_id = get_jwt_identity()
     access_token = create_access_token(identity=str(current_user_id))
     return jsonify({'access_token': access_token}), 200
+
+
+@auth_bp.route('/test-email', methods=['POST'])
+def test_email():
+    """
+    Test email configuration
+    ---
+    tags:
+      - Authentication
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - email
+          properties:
+            email:
+              type: string
+              example: test@example.com
+              description: Email address to send test email to
+    responses:
+      200:
+        description: Test email sent successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            success:
+              type: boolean
+      400:
+        description: Email required
+      500:
+        description: Failed to send email (SMTP not configured)
+    """
+    data = request.get_json()
+    recipient = data.get('email')
+    
+    if not recipient:
+        return jsonify({'error': 'Email required'}), 400
+    
+    success = EmailService.send_test_email(recipient)
+    
+    if success:
+        return jsonify({
+            'message': 'Test email sent successfully! Check your inbox.',
+            'success': True
+        }), 200
+    else:
+        return jsonify({
+            'error': 'Failed to send email. Check your SMTP settings in .env file.',
+            'success': False
+        }), 500

@@ -181,7 +181,7 @@ class Accommodation(db.Model):
     confirmation_number = db.Column(db.String(100))
     cost_per_night = db.Column(db.Float)
     total_cost = db.Column(db.Float)
-    currency = db.Column(db.String(3), default='USD')
+    currency = db.Column(db.String(3), default='INR')
     contact_phone = db.Column(db.String(20))
     contact_email = db.Column(db.String(100))
     booking_url = db.Column(db.String(500))
@@ -255,7 +255,7 @@ class Activity(db.Model):
     
     # Financial
     cost = db.Column(db.Float, default=0.0)
-    currency = db.Column(db.String(3), default='USD')
+    currency = db.Column(db.String(3), default='INR')
     paid = db.Column(db.Boolean, default=False)
     
     # Contact & Details
@@ -331,4 +331,209 @@ class Activity(db.Model):
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None
+        }
+
+
+class BudgetCategory(db.Model):
+    """Budget categories for expense tracking"""
+    __tablename__ = 'budget_categories'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    category = db.Column(db.String(100), nullable=False)  # Accommodation, Food, Transport, Activities, Shopping, etc.
+    allocated_amount = db.Column(db.Float, nullable=False, default=0.0)
+    spent_amount = db.Column(db.Float, default=0.0)
+    currency = db.Column(db.String(3), default='INR')
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    trip = db.relationship('Trip', backref=db.backref('budget_categories', lazy=True, cascade='all, delete-orphan'))
+    expenses = db.relationship('Expense', backref='budget_category_rel', lazy=True, foreign_keys='Expense.category_id')
+    
+    @property
+    def remaining_amount(self):
+        """Calculate remaining budget"""
+        return self.allocated_amount - self.spent_amount
+    
+    @property
+    def percentage_used(self):
+        """Calculate percentage of budget used"""
+        if self.allocated_amount == 0:
+            return 0.0
+        return (self.spent_amount / self.allocated_amount) * 100
+    
+    @property
+    def is_over_budget(self):
+        """Check if category is over budget"""
+        return self.spent_amount > self.allocated_amount
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'trip_id': self.trip_id,
+            'category': self.category,
+            'allocated_amount': self.allocated_amount,
+            'spent_amount': self.spent_amount,
+            'remaining_amount': self.remaining_amount,
+            'percentage_used': round(self.percentage_used, 2),
+            'is_over_budget': self.is_over_budget,
+            'currency': self.currency,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+
+class Expense(db.Model):
+    """Expense records for trips"""
+    __tablename__ = 'expenses'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('budget_categories.id'), nullable=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    amount = db.Column(db.Float, nullable=False)
+    currency = db.Column(db.String(3), default='INR')
+    
+    # Expense details
+    paid_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    expense_date = db.Column(db.DateTime, default=datetime.utcnow)
+    payment_method = db.Column(db.String(50))  # Cash, Credit Card, Debit Card, etc.
+    receipt_url = db.Column(db.String(500))
+    vendor_name = db.Column(db.String(200))
+    location = db.Column(db.String(200))
+    
+    # Split information
+    is_split = db.Column(db.Boolean, default=False)
+    split_type = db.Column(db.String(20), default='equal')  # equal, percentage, custom
+    
+    # Status tracking
+    is_settled = db.Column(db.Boolean, default=False)
+    notes = db.Column(db.Text)
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    trip = db.relationship('Trip', backref=db.backref('expenses', lazy=True, cascade='all, delete-orphan'))
+    payer = db.relationship('User', backref='expenses_paid', foreign_keys=[paid_by])
+    splits = db.relationship('ExpenseSplit', backref='expense', lazy=True, cascade='all, delete-orphan')
+    
+    @property
+    def total_splits_amount(self):
+        """Calculate total amount from splits"""
+        return sum(split.amount for split in self.splits)
+    
+    @property
+    def unsettled_amount(self):
+        """Calculate amount not yet settled"""
+        return sum(split.amount for split in self.splits if not split.is_paid)
+    
+    def to_dict(self, include_splits=True):
+        data = {
+            'id': self.id,
+            'trip_id': self.trip_id,
+            'category_id': self.category_id,
+            'category_name': self.budget_category_rel.category if self.category_id else None,
+            'title': self.title,
+            'description': self.description,
+            'amount': self.amount,
+            'currency': self.currency,
+            'paid_by': self.paid_by,
+            'payer_name': self.payer.username if self.payer else None,
+            'expense_date': self.expense_date.isoformat() if self.expense_date else None,
+            'payment_method': self.payment_method,
+            'receipt_url': self.receipt_url,
+            'vendor_name': self.vendor_name,
+            'location': self.location,
+            'is_split': self.is_split,
+            'split_type': self.split_type,
+            'is_settled': self.is_settled,
+            'total_splits_amount': self.total_splits_amount,
+            'unsettled_amount': self.unsettled_amount,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+        
+        if include_splits:
+            data['splits'] = [split.to_dict() for split in self.splits]
+        
+        return data
+
+
+class ExpenseSplit(db.Model):
+    """Split details for expenses among collaborators"""
+    __tablename__ = 'expense_splits'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    percentage = db.Column(db.Float)  # If split by percentage
+    is_paid = db.Column(db.Boolean, default=False)
+    paid_at = db.Column(db.DateTime)
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user = db.relationship('User', backref='expense_splits')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'expense_id': self.expense_id,
+            'user_id': self.user_id,
+            'username': self.user.username if self.user else None,
+            'amount': self.amount,
+            'percentage': self.percentage,
+            'is_paid': self.is_paid,
+            'paid_at': self.paid_at.isoformat() if self.paid_at else None,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+
+class Settlement(db.Model):
+    """Track settlements between users for a trip"""
+    __tablename__ = 'settlements'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    from_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    to_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    currency = db.Column(db.String(3), default='INR')
+    is_settled = db.Column(db.Boolean, default=False)
+    settled_at = db.Column(db.DateTime)
+    payment_method = db.Column(db.String(50))
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    trip = db.relationship('Trip', backref=db.backref('settlements', lazy=True, cascade='all, delete-orphan'))
+    from_user = db.relationship('User', foreign_keys=[from_user_id], backref='settlements_owed')
+    to_user = db.relationship('User', foreign_keys=[to_user_id], backref='settlements_due')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'trip_id': self.trip_id,
+            'from_user_id': self.from_user_id,
+            'from_username': self.from_user.username if self.from_user else None,
+            'to_user_id': self.to_user_id,
+            'to_username': self.to_user.username if self.to_user else None,
+            'amount': self.amount,
+            'currency': self.currency,
+            'is_settled': self.is_settled,
+            'settled_at': self.settled_at.isoformat() if self.settled_at else None,
+            'payment_method': self.payment_method,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
