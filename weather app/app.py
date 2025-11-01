@@ -2,10 +2,41 @@ from flask import Flask
 from flasgger import Swagger
 from config import Config
 from extensions import db, bcrypt, jwt, migrate
+from dotenv import load_dotenv
+import os
+import logging
+
+# Load environment variables from .env file
+basedir = os.path.abspath(os.path.dirname(__file__))
+env_path = os.path.join(basedir, '.env')
+load_dotenv(env_path)
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    
+    # Set up console logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    # Verify API key is loaded
+    api_key = app.config.get('WEATHER_API_KEY', '')
+    print("\n" + "="*60)
+    print("🌍 Trip Planner API - Configuration Check")
+    print("="*60)
+    
+    if api_key and len(api_key) > 10:
+        print(f"✅ Weather API Key: {api_key[:10]}...{api_key[-4:]}")
+        print(f"✅ API Key Length: {len(api_key)} characters")
+    else:
+        print("❌ Weather API Key: NOT LOADED!")
+        print(f"❌ Current value: {api_key}")
+    
+    print(f"✅ Base URL: {app.config['WEATHER_API_BASE_URL']}")
+    print(f"✅ Units: {app.config['WEATHER_UNITS']}")
+    print("="*60 + "\n")
     
     # Initialize extensions with app
     db.init_app(app)
@@ -48,11 +79,13 @@ def create_app(config_class=Config):
     from blueprints.users import users_bp
     from blueprints.trips import trips_bp
     from blueprints.activities import activities_bp
+    from blueprints.collaborators import collaborators_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
     app.register_blueprint(trips_bp, url_prefix='/api/trips')
     app.register_blueprint(activities_bp, url_prefix='/api')
+    app.register_blueprint(collaborators_bp, url_prefix='/api')
     
     # Create database tables
     with app.app_context():
@@ -71,4 +104,13 @@ def create_app(config_class=Config):
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True)
+    print("\n" + "="*60)
+    print("🚀 Starting Trip Planner API Server")
+    print("="*60)
+    print(f"📍 API: http://127.0.0.1:5000")
+    print(f"📚 Docs: http://127.0.0.1:5000/docs/")
+    print(f"🌤️  Weather: Enabled (WeatherAPI.com)")
+    print(f"📅 Activities & Day Plans: Enabled")
+    print(f"👥 Collaborators: Enabled")
+    print("="*60 + "\n")
+    app.run(debug=True, host='0.0.0.0', port=5000)

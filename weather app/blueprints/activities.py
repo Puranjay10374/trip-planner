@@ -3,6 +3,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from extensions import db
 from collections import defaultdict
+from utils.activity_service import ActivityService
+from utils.collaborator_service import CollaboratorService
+from utils.response_formatter import ResponseFormatter
 
 activities_bp = Blueprint('activities', __name__)
 
@@ -557,3 +560,234 @@ def get_itinerary(trip_id):
             'activities_by_category': dict(category_breakdown)
         }
     }), 200
+
+
+# ==================== DAY PLANS ENDPOINTS ====================
+
+@activities_bp.route('/trips/<int:trip_id>/day-plans', methods=['POST'])
+@jwt_required()
+def create_day_plan(trip_id):
+    """
+    Create a day plan for a trip
+    ---
+    tags:
+      - Day Plans
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: trip_id
+        type: integer
+        required: true
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - date
+          properties:
+            date:
+              type: string
+              format: date
+              example: "2024-07-15"
+            title:
+              type: string
+              example: "Day 1 - Arrival in Paris"
+            description:
+              type: string
+              example: "Arrive at hotel and explore nearby areas"
+            accommodation_id:
+              type: integer
+            total_distance:
+              type: number
+              example: 25.5
+            estimated_cost:
+              type: number
+              example: 150.0
+            notes:
+              type: string
+            is_rest_day:
+              type: boolean
+              default: false
+    responses:
+      201:
+        description: Day plan created successfully
+      400:
+        description: Invalid input
+      403:
+        description: Unauthorized
+      404:
+        description: Trip not found
+    """
+    current_user_id = int(get_jwt_identity())
+    
+    if not CollaboratorService.can_edit_trip(trip_id, current_user_id):
+        return ResponseFormatter.unauthorized('You need editor role to create day plans')
+    
+    data = request.get_json()
+    data['user_id'] = current_user_id
+    
+    date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    
+    result, error, status_code = ActivityService.create_day_plan(trip_id, date, data)
+    
+    if error:
+        return ResponseFormatter.error(error.get('error'), status_code)
+    
+    return ResponseFormatter.created(result, 'Day plan created successfully')
+
+
+@activities_bp.route('/trips/<int:trip_id>/day-plans/auto-generate', methods=['POST'])
+@jwt_required()
+def auto_generate_day_plans(trip_id):
+    """
+    Auto-generate day plans for entire trip
+    ---
+    tags:
+      - Day Plans
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: trip_id
+        type: integer
+        required: true
+    responses:
+      201:
+        description: Day plans generated successfully
+      403:
+        description: Unauthorized
+      404:
+        description: Trip not found
+    """
+    current_user_id = int(get_jwt_identity())
+    
+    if not CollaboratorService.can_edit_trip(trip_id, current_user_id):
+        return ResponseFormatter.unauthorized('You need editor role to generate day plans')
+    
+    result, error, status_code = ActivityService.auto_generate_day_plans(trip_id)
+    
+    if error:
+        return ResponseFormatter.error(error.get('error'), status_code)
+    
+    return ResponseFormatter.created(result, result.get('message'))
+
+
+@activities_bp.route('/trips/<int:trip_id>/itinerary/enhanced', methods=['GET'])
+@jwt_required()
+def get_enhanced_itinerary(trip_id):
+    """
+    Get complete enhanced itinerary with day plans and statistics
+    ---
+    tags:
+      - Day Plans
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: trip_id
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Complete enhanced itinerary with day plans
+        schema:
+          type: object
+          properties:
+            trip_id:
+              type: integer
+            trip_title:
+              type: string
+            destination:
+              type: string
+            start_date:
+              type: string
+              format: date
+            end_date:
+              type: string
+              format: date
+            duration_days:
+              type: integer
+            day_plans:
+              type: array
+            unassigned_activities:
+              type: array
+            statistics:
+              type: object
+      403:
+        description: Unauthorized
+      404:
+        description: Trip not found
+    """
+    current_user_id = int(get_jwt_identity())
+    
+    if not CollaboratorService.can_view_trip(trip_id, current_user_id):
+        return ResponseFormatter.unauthorized('You do not have permission to view this trip')
+    
+    result, error, status_code = ActivityService.get_trip_itinerary(trip_id)
+    return ResponseFormatter.handle_service_response(result, error, status_code)
+
+
+@activities_bp.route('/trips/<int:trip_id>/activities/by-category', methods=['GET'])
+@jwt_required()
+def get_activities_by_category(trip_id):
+    """
+    Get activities grouped by category
+    ---
+    tags:
+      - Activities
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: trip_id
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Activities grouped by category
+      403:
+        description: Unauthorized
+      404:
+        description: Trip not found
+    """
+    current_user_id = int(get_jwt_identity())
+    
+    if not CollaboratorService.can_view_trip(trip_id, current_user_id):
+        return ResponseFormatter.unauthorized()
+    
+    result, error, status_code = ActivityService.get_activities_by_category(trip_id)
+    return ResponseFormatter.handle_service_response(result, error, status_code)
+
+
+@activities_bp.route('/trips/<int:trip_id>/activities/by-status', methods=['GET'])
+@jwt_required()
+def get_activities_by_status(trip_id):
+    """
+    Get activities grouped by status
+    ---
+    tags:
+      - Activities
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: trip_id
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Activities grouped by status
+      403:
+        description: Unauthorized
+      404:
+        description: Trip not found
+    """
+    current_user_id = int(get_jwt_identity())
+    
+    if not CollaboratorService.can_view_trip(trip_id, current_user_id):
+        return ResponseFormatter.unauthorized()
+    
+    result, error, status_code = ActivityService.get_activities_by_status(trip_id)
+    return ResponseFormatter.handle_service_response(result, error, status_code)
