@@ -1,0 +1,47 @@
+# Environment variables - NEVER COMMIT!
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Flask
+instance/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+site.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Uploads (if you add file uploads later)
+uploads/
+receipts/
+photos/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
