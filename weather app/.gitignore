@@ -1,4 +1,4 @@
-# Environment variables - NEVER COMMIT!
+﻿# Environment variables - NEVER COMMIT!
 .env
 .env.local
 .env.*.local
@@ -36,7 +36,7 @@ Thumbs.db
 # Logs
 *.log
 
-# Uploads (if you add file uploads later)
+# Uploads
 uploads/
 receipts/
 photos/
