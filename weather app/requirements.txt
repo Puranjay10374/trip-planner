@@ -7,3 +7,4 @@ Flask-Migrate==4.0.5
 Flask-Mail==0.9.1
 python-dotenv==1.0.0
 requests==2.31.0
+google-generativeai==0.3.2

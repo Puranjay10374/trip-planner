@@ -82,6 +82,7 @@ def create_app(config_class=Config):
     from blueprints.activities import activities_bp
     from blueprints.collaborators import collaborators_bp
     from blueprints.expenses import expenses_bp
+    from blueprints.chatbot import chatbot_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
@@ -89,6 +90,7 @@ def create_app(config_class=Config):
     app.register_blueprint(activities_bp, url_prefix='/api')
     app.register_blueprint(collaborators_bp, url_prefix='/api')
     app.register_blueprint(expenses_bp, url_prefix='/api')
+    app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
     
     # Create database tables
     with app.app_context():
@@ -123,6 +125,12 @@ if __name__ == '__main__':
         print(f"📧 Email: Enabled ({app.config['MAIL_SERVER']})")
     else:
         print(f"📧 Email: Disabled (Configure MAIL_USERNAME in .env)")
+    
+    # Check chatbot configuration
+    if os.getenv('GEMINI_API_KEY'):
+        print(f"🤖 AI Chatbot: Enabled (Google Gemini)")
+    else:
+        print(f"🤖 AI Chatbot: Disabled (Configure GEMINI_API_KEY in .env)")
     
     print("="*60 + "\n")
     app.run(debug=True, host='0.0.0.0', port=5000)

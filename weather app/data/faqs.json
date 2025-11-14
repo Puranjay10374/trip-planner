@@ -1,0 +1,195 @@
+{
+  "faqs": [
+    {
+      "question": "How do I create a new trip?",
+      "answer": "To create a trip: 1) Click 'Create New Trip'. 2) Enter trip details like title, destination, start/end dates, and budget in Indian Rupees (₹). 3) Click 'Create'. You can then add activities, invite collaborators, and track expenses."
+    },
+    {
+      "question": "How do I invite someone to my trip?",
+      "answer": "To invite collaborators: 1) Open your trip. 2) Click 'Add Collaborator'. 3) Enter their email (they must have a Trip Planner account). 4) Select their role (Viewer, Editor, or Owner). 5) Click 'Send Invite'. They'll receive an email invitation."
+    },
+    {
+      "question": "How do I add expenses?",
+      "answer": "To track expenses: 1) Open your trip. 2) Click 'Add Expense'. 3) Enter title, amount (₹), category (food, transport, accommodation, etc.), date, and who paid. 4) Optional: Split expense among collaborators. 5) Click 'Save'. The expense is added to your budget tracking."
+    },
+    {
+      "question": "How do I split expenses with friends?",
+      "answer": "When adding an expense: 1) Check 'Split this expense'. 2) Choose split type: Equal Split (divide evenly), Custom Amounts (specific amount per person), or Percentage Split. 3) Select who to split with. 4) Save. Everyone gets notified and the app tracks who owes whom."
+    },
+    {
+      "question": "Can I use currencies other than rupees?",
+      "answer": "Yes! Trip Planner supports multiple currencies including INR (₹), USD ($), EUR (€), GBP (£), AED, SGD, AUD, CAD, JPY, CNY, THB, and MYR. When adding expenses, select the currency used. All amounts display with proper currency symbols."
+    },
+    {
+      "question": "How do I check weather for my trip?",
+      "answer": "Weather forecasts are automatic: 1) Open your trip. 2) Go to 'Weather' tab. 3) See current weather, 7-day forecast, and severe weather alerts for your destination. Weather updates every 30 minutes using WeatherAPI.com."
+    },
+    {
+      "question": "How do I add activities to my itinerary?",
+      "answer": "To add activities: 1) Open your trip. 2) Click 'Add Activity'. 3) Fill in details: title, date/time, location, category (sightseeing, food, transport, etc.), cost (₹), booking reference, and notes. 4) Click 'Save'. Activities appear in your day-by-day itinerary."
+    },
+    {
+      "question": "What are settlements and how do they work?",
+      "answer": "Settlements show who owes money after splitting expenses. The app calculates net balances automatically and minimizes transactions. To mark as paid: 1) Go to 'Settlements'. 2) Find the entry. 3) Click 'Mark as Paid'. Both parties get notified."
+    },
+    {
+      "question": "How do I set a budget for my trip?",
+      "answer": "Set budget during trip creation by entering total amount in rupees (₹), or edit existing trip to update it. The budget tracks total spending vs planned amount, shows remaining budget in real-time, and sends alerts at 80% and 100% thresholds."
+    },
+    {
+      "question": "I forgot my password. What should I do?",
+      "answer": "If you forgot your password: 1) Click 'Forgot Password' on login page. 2) Enter your registered email. 3) Check your email for a password reset link. 4) Click the link and create a new password. 5) Log in with your new password. The reset link expires in 1 hour."
+    },
+    {
+      "question": "What emails will I receive?",
+      "answer": "You'll receive emails for: Welcome email on registration, trip invitations, new expenses added, budget alerts, activity reminders (1 day before), weather alerts, settlement reminders, and password resets. All emails come from Trip Planner."
+    },
+    {
+      "question": "How do I view my daily itinerary?",
+      "answer": "View itinerary: 1) Open your trip. 2) Go to 'Itinerary' or 'Day Plans' tab. 3) See all trip days listed. Click any day to see all activities, times, locations, costs, and weather forecast. Switch between list view, calendar view, or timeline view."
+    },
+    {
+      "question": "Can I change someone's role or permissions?",
+      "answer": "Yes, trip owners can update roles: 1) Go to 'Collaborators'. 2) Click on the person. 3) Select new role (Viewer, Editor, or Owner). 4) Save. They receive an email notification about the role change. There must always be at least one owner."
+    },
+    {
+      "question": "How accurate are weather forecasts?",
+      "answer": "Weather forecasts powered by WeatherAPI.com: 1-3 day forecasts have 90%+ accuracy, 4-7 day forecasts have 80-85% accuracy. Current conditions are real-time accurate. Forecasts update every 30 minutes, with instant alerts for severe weather changes."
+    },
+    {
+      "question": "What payment methods can I use for settlements?",
+      "answer": "Trip Planner tracks payments but doesn't process them. Settle externally using: UPI (Google Pay, PhonePe, Paytm), bank transfer, cash, credit/debit card, or PayPal/Venmo. After paying, mark the settlement as paid in Trip Planner to update records."
+    },
+    {
+      "question": "Is my data backed up and secure?",
+      "answer": "Yes! Your data is automatically saved to database in real-time, backed up daily to secure servers, and encrypted during storage and transmission. We never sell your data, share with third parties, or use for advertising. Active trips are kept indefinitely."
+    },
+    {
+      "question": "Which browsers are supported?",
+      "answer": "Fully supported browsers: Google Chrome (latest), Mozilla Firefox (latest), Safari (latest), and Microsoft Edge (latest). Also works on Brave, Opera, and mobile browsers (Chrome, Safari). For best experience, keep your browser updated."
+    },
+    {
+      "question": "Can I leave a trip I was invited to?",
+      "answer": "Yes! To leave: 1) Open the trip. 2) Click 'Leave Trip' in settings. 3) Confirm. You'll lose access immediately. Your past contributions (expenses you added) remain for the group. You can be re-invited later if needed."
+    },
+    {
+      "question": "How do I mark an expense as paid?",
+      "answer": "After receiving/sending money: 1) Go to 'Settlements'. 2) Find the settlement entry. 3) Click 'Mark as Paid'. 4) Optional: Enter payment method, transaction ID, date, and notes. 5) Save. Both parties get notified and the settlement moves to 'Completed' list."
+    },
+    {
+      "question": "What types of activities can I add?",
+      "answer": "You can add any type: Sightseeing (museums, landmarks), Dining (restaurants, cafes), Transportation (flights, trains), Accommodation check-ins, Entertainment (shows, concerts), Shopping, Sports & Recreation, Tours & Experiences, Meetings & Work, or Free time/Relaxation."
+    },
+    {
+      "question": "How do I register for an account?",
+      "answer": "To register: 1) Click 'Register' or 'Sign Up'. 2) Enter your username, email, and password. 3) Submit. 4) Check your email for a welcome message. You can then log in immediately with your credentials."
+    },
+    {
+      "question": "Can I edit my trip after creating it?",
+      "answer": "Yes! You can edit any trip you created. Click on the trip, then 'Edit Trip' to modify title, destination, dates, budget, or description. Changes are saved immediately and all collaborators are notified."
+    },
+    {
+      "question": "How do I delete a trip?",
+      "answer": "To delete: 1) Open the trip. 2) Click 'Delete Trip' or trash icon. 3) Confirm. Warning: This permanently removes all data including activities, expenses, day plans, and collaborator access. Cannot be undone."
+    },
+    {
+      "question": "Can I have multiple trips at once?",
+      "answer": "Absolutely! You can create and manage unlimited trips simultaneously. Useful for planning multiple vacations, managing work and personal trips separately, keeping past trips for reference, or organizing different travel scenarios."
+    },
+    {
+      "question": "How many people can I invite to a trip?",
+      "answer": "You can invite up to 10 collaborators per trip by default. This ensures smooth collaboration and performance. If you need more for a large group trip, contact support for assistance."
+    },
+    {
+      "question": "What collaborator roles are available?",
+      "answer": "Three roles: Viewer (can only view trip details, read-only), Editor (can view and edit activities/expenses), Owner (full control including managing collaborators and deleting trip). Owners can change roles anytime."
+    },
+    {
+      "question": "How do I accept a trip invitation?",
+      "answer": "When invited: 1) Check your email for the invitation. 2) Click 'Accept Invitation' in the email, or log into Trip Planner and go to 'Invitations'. 3) Click 'Accept'. The trip appears in your 'My Trips' list."
+    },
+    {
+      "question": "Can I remove someone from my trip?",
+      "answer": "Yes, if you're the owner: 1) Open the trip. 2) Go to 'Collaborators'. 3) Find the person. 4) Click 'Remove' or trash icon. 5) Confirm. They lose access immediately and receive a notification. Their past contributions remain visible."
+    },
+    {
+      "question": "How do I see my total spending?",
+      "answer": "View spending: 1) Trip Dashboard shows total spent vs budget. 2) Expense List filters by category, date, or person. 3) Budget Overview shows category-wise breakdown with charts. 4) Analytics shows spending trends, per-person contributions, and payment methods. All in Indian Rupees (₹)."
+    },
+    {
+      "question": "Can I upload receipts for expenses?",
+      "answer": "Yes! When adding or editing an expense: 1) Click 'Upload Receipt' or camera icon. 2) Select photo/PDF. 3) Receipt attaches to expense. Great for reimbursement proof, tax documentation, and complete expense records. Supports JPG, PNG, PDF."
+    },
+    {
+      "question": "How do budget categories work?",
+      "answer": "Budget categories help allocate your total budget across different expense types like Accommodation, Food, Transport, Activities, Shopping, Emergency. Each category tracks allocated amount, spent amount, remaining budget, and percentage used with over/under budget status."
+    },
+    {
+      "question": "What happens if I go over budget?",
+      "answer": "Going over budget: App shows 'Over Budget' warning in red, calculates excess amount, suggests cutbacks, but still allows adding expenses. You can increase budget if needed, review unnecessary expenses, or adjust future spending. Budget is a guide, not a hard limit."
+    },
+    {
+      "question": "How do I get budget alerts?",
+      "answer": "Automatic alerts notify you when: 80% of category budget spent (Warning), 100% reached (Alert), overall trip budget exceeded, or daily spending unusually high. Alerts sent via email and in-app notifications. Configure thresholds in trip settings."
+    },
+    {
+      "question": "Can I adjust my budget during the trip?",
+      "answer": "Yes! Budgets are flexible: 1) Go to 'Budget' or 'Edit Trip'. 2) Update total budget. 3) Adjust category allocations. 4) Save. App recalculates percentages, updates remaining amounts, shows comparison, and notifies collaborators."
+    },
+    {
+      "question": "What are Day Plans?",
+      "answer": "Day Plans organize your trip day-by-day: Each day from start to end gets a plan, activities grouped by date, timeline view, shows morning/afternoon/evening activities, travel time between locations, meals and breaks, daily budget and expenses, plus weather forecast."
+    },
+    {
+      "question": "Can I add notes to specific days?",
+      "answer": "Yes! Each Day Plan allows: General day notes, activity-specific notes, travel tips, important reminders, and links to reservations. Notes visible to all collaborators (shared) or just you (private). Use for directions, contacts, backup plans, special instructions."
+    },
+    {
+      "question": "How do I stop receiving emails?",
+      "answer": "To manage notifications: 1) Go to 'Settings' or 'Profile'. 2) Find 'Email Preferences'. 3) Toggle off categories you don't want: trip invitations, expense notifications, budget alerts, activity reminders, weather alerts. 4) Save. Critical emails (password reset) cannot be disabled."
+    },
+    {
+      "question": "Why didn't I receive an email?",
+      "answer": "If not receiving emails: 1) Check spam/junk folder. 2) Add noreply@tripplanner.com to contacts. 3) Verify email address in profile. 4) Check email preferences are enabled. 5) Ensure inbox isn't full. 6) Use 'Test Email' in settings to verify."
+    },
+    {
+      "question": "Can I export my expense report?",
+      "answer": "Yes! Export options: 1) Go to 'Expenses' or 'Reports'. 2) Click 'Export'. 3) Choose format: PDF (formatted report with charts), CSV (spreadsheet), or Email (send to yourself). Report includes all expenses, category breakdown, budget comparison, splits, and receipts."
+    },
+    {
+      "question": "The app is slow or not loading",
+      "answer": "Try: 1) Refresh page (Ctrl+R). 2) Clear browser cache and cookies. 3) Check internet connection. 4) Try different browser (Chrome, Firefox, Safari). 5) Log out and back in. 6) Check service status. 7) Try different device. Contact support if persists."
+    },
+    {
+      "question": "I'm getting an error message",
+      "answer": "Common errors: 'Invalid credentials' (wrong email/password), '401 Unauthorized' (session expired, log in again), '404 Not Found' (item deleted or wrong URL), '500 Server Error' (temporary issue, try again), 'Network Error' (check internet). Note exact message, try refreshing, take screenshot, contact support."
+    },
+    {
+      "question": "Can I suggest new features?",
+      "answer": "Absolutely! Email: feedback@tripplanner.com. Describe: What feature you want, why it's useful, how you'd use it, and priority. Popular requests: mobile app, offline mode, flight/hotel booking integration, group polls, photo albums. We review all suggestions."
+    },
+    {
+      "question": "Is there a mobile app?",
+      "answer": "Not yet, but coming soon! Currently: Access via mobile browser (fully responsive), works on all phones and tablets, install as Progressive Web App (PWA) for app-like experience. Native mobile apps (iOS & Android) are on our roadmap. Web version works great on mobile!"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2024-11-14",
+    "total_faqs": 44,
+    "categories": [
+      "General",
+      "Authentication",
+      "Trips",
+      "Activities",
+      "Collaborators",
+      "Expenses",
+      "Budget",
+      "Settlements",
+      "Weather",
+      "Day Plans",
+      "Email",
+      "Technical"
+    ]
+  }
+}
